@@ -6,4 +6,12 @@ const {join} = require('path');
 
 fetch('https://github.com/typicode/jsonplaceholder/raw/master/data.json')
     .then(res => res.json())
-    .then(json => fs.writeFileSync(join(__dirname, 'server', 'data.json'), JSON.stringify(json, null, 2), 'utf8'));
+    .then(json => {
+        fs.writeFileSync(
+            join(__dirname, 'server', 'data.json'),
+            JSON.stringify(json, null, 2),
+            'utf8'
+        );
+    }, e => {
+        console.error(e);
+    });

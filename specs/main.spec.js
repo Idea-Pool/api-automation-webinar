@@ -2,7 +2,7 @@
 
 const chakram = require('chakram');
 const expect = chakram.expect;
-const api = require('./api');
+const api = require('./utils/api');
 
 describe('JSON Server', () => {
     it('should run', () => {
@@ -17,7 +17,7 @@ describe('JSON Server', () => {
             expect(posts.length).to.be.greaterThan(0);
         });
         return chakram.wait();
-    })
+    });
 });
 
-setTimeout(run, 3000);
+require('./utils/run');

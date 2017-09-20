@@ -38,3 +38,16 @@ First it will download a fresh test [data set](./server/data.json). It will also
 ## API of the server
 
 The server and the API of it can be found on the [json-server](https://github.com/typicode/json-server) site.
+
+### Types
+
+* Posts
+* Comments
+* Users
+* Todos
+* Photos
+* Albums
+
+## Task
+
+Create API test for the above listed types, based on the CRUD principles and basic API definition of json-server.
