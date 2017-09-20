@@ -29,7 +29,7 @@ describe('Posts', () => {
         it('should return limited data if requested (?_limit)', () => {
             const response = chakram.get(api.url('posts', '_limit=5'));
             expect(response).to.have.status(200);
-            expect(response).to.have.header('X-Total-Count', 100);
+            expect(response).to.have.header('X-Total-Count', '100');
             expect(response).to.have.json('data', data => {
                 expect(data).to.be.instanceof(Array);
                 expect(data.length).to.equal(5);
