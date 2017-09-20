@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "node download.js",
-    "test": "concurrently --kill-others --names \"server,test\" \"npm run serve\" \"mocha --delay specs\"",
-    "serve": "node server/server.js"
+    "test": "concurrently --kill-others --names \"server,test\" \"npm start\" \"mocha --delay specs\"",
+    "start": "node server/server.js"
   },
   "repository": {
     "type": "git",
