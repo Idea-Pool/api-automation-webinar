@@ -1,5 +1,7 @@
 # api-automation-webinar
 
+[![Build Status](https://travis-ci.org/szikszail/api-automation-webinar.svg?branch=master)](https://travis-ci.org/szikszail/api-automation-webinar)
+
 Sample API testing project
 
 ## Requirements
