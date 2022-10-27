@@ -1,0 +1,400 @@
+{
+	"info": {
+		"_postman_id": "41181e24-4836-4a38-93a2-d970753e842f",
+		"name": "API Automation Webinar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20602180"
+	},
+	"item": [
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "TC-POST-1 should add a  post",
+					"item": [
+						{
+							"name": "Checking post does not exist",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"postId\", Date.now());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{postUrl}}/{{postId}}",
+									"host": [
+										"{{postUrl}}"
+									],
+									"path": [
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.collectionVariables.set(\"addedPostId\", pm.response.json().data.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": {{postUserId}},\r\n    \"id\": {{postId}},\r\n    \"title\": \"{{postTitle}}\",\r\n    \"body\": \"{{postBody}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{postUrl}}/",
+									"host": [
+										"{{postUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Checking the created post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check response body\", function () {\r",
+											"    var post = pm.response.json().data;\r",
+											"    pm.expect(post.id).to.eql(pm.collectionVariables.get(\"addedPostId\"));\r",
+											"    pm.expect(post.title).to.eql(pm.collectionVariables.get(\"postTitle\"));\r",
+											"    pm.expect(post.body).to.eql(pm.collectionVariables.get(\"postBody\"));\r",
+											"    pm.expect(post.userId).to.eql(Number(pm.collectionVariables.get(\"postUserId\")));\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{postUrl}}/{{addedPostId}}",
+									"host": [
+										"{{postUrl}}"
+									],
+									"path": [
+										"{{addedPostId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TC-POST-2 should add a post without data",
+					"item": [
+						{
+							"name": "Create post without data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.collectionVariables.set(\"addedPostId\", pm.response.json().data.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{postUrl}}/",
+									"host": [
+										"{{postUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check the created post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check response body\", function () {\r",
+											"    var post = pm.response.json().data;\r",
+											"    pm.expect(post.id).to.eql(pm.collectionVariables.get(\"addedPostId\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{postUrl}}/{{addedPostId}}",
+									"host": [
+										"{{postUrl}}"
+									],
+									"path": [
+										"{{addedPostId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TC-POST-3 should not add a post with existing ID",
+					"item": [
+						{
+							"name": "Create a post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.collectionVariables.set(\"addedPostId\", pm.response.json().data.id);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"postId\", Date.now());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": {{postUserId}},\r\n    \"id\": {{postId}},\r\n    \"title\": \"{{postTitle}}\",\r\n    \"body\": \"{{postBody}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{postUrl}}/",
+									"host": [
+										"{{postUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check post exists",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check response body\", function () {\r",
+											"    var post = pm.response.json().data;\r",
+											"    pm.expect(post.id).to.eql(pm.collectionVariables.get(\"addedPostId\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{postUrl}}/{{addedPostId}}",
+									"host": [
+										"{{postUrl}}"
+									],
+									"path": [
+										"{{addedPostId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create a post with existing ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 500\", function () {\r",
+											"    pm.response.to.have.status(500);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": {{postUserId}},\r\n    \"id\": {{postId}},\r\n    \"title\": \"{{postTitle}}\",\r\n    \"body\": \"{{postBody}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{postUrl}}/",
+									"host": [
+										"{{postUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "postId",
+			"value": "101",
+			"type": "string"
+		},
+		{
+			"key": "postTitle",
+			"value": "new post",
+			"type": "string"
+		},
+		{
+			"key": "postUserId",
+			"value": "10",
+			"type": "string"
+		},
+		{
+			"key": "postBody",
+			"value": "body",
+			"type": "string"
+		},
+		{
+			"key": "postUrl",
+			"value": "{{url}}/posts",
+			"type": "string"
+		},
+		{
+			"key": "addedPostId",
+			"value": ""
+		}
+	]
+}
